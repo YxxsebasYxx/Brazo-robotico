@@ -10,7 +10,7 @@ const int EncoderA = 53;
 volatile int counter = 0;
 // Crea un objeto Encoder
 Encoder myEncoder(EncoderA, EncoderB);
- long encoderPosition = 0;
+long encoderPosition = 0;
 // Variable para almacenar la posición del encoder
 
 // Función que se llama cuando se presiona el botón
