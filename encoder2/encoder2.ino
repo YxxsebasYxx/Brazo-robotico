@@ -1,8 +1,8 @@
 #include <Encoder.h>
 
 // Define los pines a los que están conectados los canales A y B del encoder
-const int pinA = 39; // Canal A del encoder
-const int pinB = 41; // Canal B del encoder
+const int pinA = 4; // Canal A del encoder
+const int pinB = 7; // Canal B del encoder
 
 const int initial = 25000;
 
