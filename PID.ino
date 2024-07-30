@@ -124,8 +124,8 @@ void Movimiento_BASE() {
     long initialPosition = myEncoder2.read();
 
     // Mueve la base hacia un lado
-    digitalWrite(Motor3, HIGH);
-    digitalWrite(Motor4, LOW);
+    digitalWrite(Motor3, LOW);
+    digitalWrite(Motor4, HIGH);
     while (abs(myEncoder2.read() - initialPosition) < 700) {
         // Continúa moviendo hasta alcanzar la posición deseada
     }
@@ -134,8 +134,8 @@ void Movimiento_BASE() {
     delay(1000);
 
     // Mueve la base hacia el otro lado
-    digitalWrite(Motor3, LOW);
-    digitalWrite(Motor4, HIGH);
+    digitalWrite(Motor3, HIGH);
+    digitalWrite(Motor4, LOW);
     while (abs(myEncoder2.read() - initialPosition) < 1100) {
         // Continúa moviendo hasta alcanzar la posición deseada
     }
