@@ -93,7 +93,7 @@ void controlMotors() {
     }
 
     if (counter2 == 0) {
-        digitalWrite(Motor3, HIGH);
+        digitalWrite(Motor3, LOW);
         digitalWrite(Motor4, LOW);
         Serial.print("Contador 2: ");
         Serial.println(counter2);
@@ -117,6 +117,7 @@ void Movimiento_CODO() {
     digitalWrite(Motor1, LOW);
     digitalWrite(Motor2, LOW);
     delay(2000);
+     attachInterrupt(digitalPinToInterrupt(buttonPin1), handleButtonPress1, FALLING);
 }
 
 // Función para el movimiento de la base
@@ -124,8 +125,8 @@ void Movimiento_BASE() {
     long initialPosition = myEncoder2.read();
 
     // Mueve la base hacia un lado
-    digitalWrite(Motor3, LOW);
-    digitalWrite(Motor4, HIGH);
+    digitalWrite(Motor3, HIGH);
+    digitalWrite(Motor4, LOW);
     while (abs(myEncoder2.read() - initialPosition) < 700) {
         // Continúa moviendo hasta alcanzar la posición deseada
     }
@@ -134,14 +135,15 @@ void Movimiento_BASE() {
     delay(1000);
 
     // Mueve la base hacia el otro lado
-    digitalWrite(Motor3, HIGH);
+    digitalWrite(Motor3, LOW);
     digitalWrite(Motor4, LOW);
-    while (abs(myEncoder2.read() - initialPosition) < 1100) {
+    while (abs(myEncoder2.read() - initialPosition) < 900) {
         // Continúa moviendo hasta alcanzar la posición deseada
     }
     digitalWrite(Motor3, LOW);
     digitalWrite(Motor4, LOW);
     delay(1000);
+
 
     // Vuelve a la posición inicial
     digitalWrite(Motor3, HIGH);
