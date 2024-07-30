@@ -64,6 +64,24 @@ void loop() {
 
   // Espera un poco antes de la siguiente iteración
   delay(100);
+  Movimiento();
 
   // Espera un segundo
 }
+
+void Movimiento(){
+  digitalWrite(Motor1,LOW);
+  digitalWrite(Motor2,HIGH);
+  delay(2000);
+  digitalWrite(Motor1,LOW);
+  digitalWrite(Motor2,LOW);
+  delay(1000);
+  digitalWrite(Motor1,HIGH);
+  digitalWrite(Motor2,LOW);
+  delay(2000);
+   digitalWrite(Motor1,LOW);
+  digitalWrite(Motor2,LOW);
+  delay(4000);
+  
+  
+  }
