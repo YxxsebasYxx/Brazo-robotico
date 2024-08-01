@@ -70,6 +70,7 @@ void loop() {
 }
 
 void Movimiento(){
+  delay(1500);
   digitalWrite(Motor1,LOW);
   digitalWrite(Motor2,HIGH);
   delay(2000);
