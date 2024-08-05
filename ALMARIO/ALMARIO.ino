@@ -1,13 +1,13 @@
 #include <Encoder.h>
 // Define el pin del botón
-const int buttonPin1 = 3;
+const int buttonPin1 = 18;
 const int Motor1 =  8;
 const int Motor2 = 7;
 const int EncoderB = 51;
 const int EncoderA = 53;
 const int Motor3=9;
 const int Motor4=10;
-const int buttonPin2 = 2 ;
+const int buttonPin2 = 19;
 const int encoderC = 49;
 const int encoderD = 47;
 volatile int counter1 = 0;

@@ -1,74 +1,93 @@
-#include <Encoder.h>
-// Define el pin del botón
-const int buttonPin = 21;
-const int Motor1 =  8;
-const int Motor2 = 7;
-const int EncoderB = 51;
-const int EncoderA = 53;
-
-// Variable para almacenar el contador
-volatile int counter = 0;
-// Crea un objeto Encoder
-Encoder myEncoder(EncoderA, EncoderB);
-long encoderPosition = 0;
-// Variable para almacenar la posición del encoder
-
-// Función que se llama cuando se presiona el botón
-
-// Función que se llama cuando ocurre una interrupción
-void handleButtonPress() {
-    detachInterrupt(digitalPinToInterrupt(buttonPin));
-  //noInterrupts();
-  counter++;
-  //EIFR |= (1 << INTF0); // Limpia la bandera de interrupción para INT0
- // interrupts();
-
-}
+const int Fc1 = 2;
+const int Fc2 = 3;
+const int PIRPin = 4;  // Pin al que está conectado el sensor PIR
+const int M11 = 8;
+const int M12 = 7;
+const int M21 = 9;
+const int M22 = 10;
+int Home = 0;
+int pirState = LOW;  // Estado inicial del PIR
+unsigned long tiempo = 0;
+unsigned long interval = 100;
 
 void setup() {
-  // Inicializa la comunicación serial
   Serial.begin(9600);
 
-  // Configura el pin del botón como entrada
-  pinMode(buttonPin, INPUT_PULLUP);
-  pinMode(Motor1, OUTPUT);
-  pinMode(Motor2, OUTPUT);
+  pinMode(Fc1, INPUT_PULLUP);
+  pinMode(Fc2, INPUT_PULLUP);
+  pinMode(PIRPin, INPUT);  // Configura el PIR como entrada
+  pinMode(M11, OUTPUT);
+  pinMode(M12, OUTPUT);
+  pinMode(M21, OUTPUT);
+  pinMode(M22, OUTPUT);
 
-  // Adjunta una interrupción al pin del botón
-  // El número de interrupción es 0 para el pin 2 en la mayoría de los Arduinos
-  // La interrupción se dispara en el cambio de nivel bajo a alto (RISING)
-attachInterrupt(digitalPinToInterrupt(buttonPin), handleButtonPress, FALLING);
-  while (counter == 0){
-    digitalWrite(Motor1,HIGH);
-    digitalWrite(Motor2,LOW);
-    Serial.print("Contador: ");
-    Serial.println(counter);
-  
-    
+  attachInterrupt(digitalPinToInterrupt(Fc1), handleButtonPress, FALLING);
+  attachInterrupt(digitalPinToInterrupt(Fc2), handleButtonPress2, FALLING);
+
+  Serial.println("Esperando detección de movimiento...");
+}
+
+void handleButtonPress() {
+  detachInterrupt(digitalPinToInterrupt(Fc1));
+  detenerMotor(M11, M12);
+}
+
+void handleButtonPress2() {
+  detachInterrupt(digitalPinToInterrupt(Fc2));
+  detenerMotor(M21, M22);
+}
+
+void detenerMotor(int motor1, int motor2) {
+  digitalWrite(motor1, LOW);
+  digitalWrite(motor2, LOW);
+}
+
+void moverMotor(int motor1, int motor2, int tiempo, bool reverse = false) {
+  if (reverse) {
+    digitalWrite(motor1, LOW);
+    digitalWrite(motor2, HIGH);
+  } else {
+    digitalWrite(motor1, HIGH);
+    digitalWrite(motor2, LOW);
   }
-  digitalWrite(Motor1,LOW);
-  digitalWrite(Motor2,LOW);
-  encoderPosition = 0;
-
-  // Imprime un mensaje de inicio
-  Serial.println("Sistema iniciado. Pulsa el botón.");
+  delay(tiempo);
+  detenerMotor(motor1, motor2);
 }
 
 void loop() {
-    // Lee el valor actual del encoder
-  encoderPosition = myEncoder.read();
+  int codo = digitalRead(Fc1);
+  int base = digitalRead(Fc2);
+  int pirVal = digitalRead(PIRPin);  // Leer el estado del PIR
 
-  // Imprime el valor del encoder
-  Serial.print("Encoder Position: ");
-  Serial.println(encoderPosition);
+  if (pirVal == HIGH && pirState == LOW) {
+    // El PIR ha detectado movimiento
+    Serial.println("¡Movimiento detectado por el PIR!");
+    pirState = HIGH;
+    tiempo = millis();  // Resetear el temporizador
 
-  // Espera un poco antes de la siguiente iteración
-  delay(100);
-  Movimiento();
+    // Iniciar secuencia de movimiento
+    if (codo == HIGH && base == HIGH && Home == 0) {
+      moverMotor(M11, M12, 0);  // Mover motor 1 hacia adelante
+      moverMotor(M21, M22, 0);  // Mover motor 2 hacia adelante
+    }
 
-  // Espera un segundo
+    if (codo == LOW && base == LOW && Home == 0) {
+      detenerMotor(M11, M12);
+      detenerMotor(M21, M22);
+      Home = 1;
+    }
+  }
+
+  if (Home == 1) {
+    realizarSecuencia();
+    regresarAPosicionInicial();
+    reactivarInterrupciones();
+    Home = 0;
+    pirState = LOW;  // Resetear el estado del PIR para la siguiente detección
+  }
 }
 
+<<<<<<< HEAD
 void Movimiento(){
   delay(1500);
   digitalWrite(Motor1,LOW);
@@ -76,13 +95,29 @@ void Movimiento(){
   delay(2000);
   digitalWrite(Motor1,LOW);
   digitalWrite(Motor2,LOW);
+=======
+void realizarSecuencia() {
+  moverMotor(M11, M12, 1000);
+  moverMotor(M11, M12, 1000);
+  delay(500);
+  moverMotor(M21, M22, 1000);
+  delay(500);
+  moverMotor(M21, M22, 1000);
+}
+
+void regresarAPosicionInicial() {
+  moverMotor(M11, M12, 1000, true);  // Mover motor 1 en reversa
+  moverMotor(M11, M12, 1000, true);
+  delay(1500);
+  moverMotor(M21, M22, 1000, true);  // Mover motor 2 en reversa
+>>>>>>> 84597710e1844bff2b20529980e00f3fbe48cdfa
   delay(1000);
-  digitalWrite(Motor1,HIGH);
-  digitalWrite(Motor2,LOW);
-  delay(2000);
-   digitalWrite(Motor1,LOW);
-  digitalWrite(Motor2,LOW);
-  delay(4000);
-  
-  
-  }
+  moverMotor(M21, M22, 1000, true);
+  delay(1000);
+  moverMotor(M11,M12,1000,true);
+}
+
+void reactivarInterrupciones() {
+  attachInterrupt(digitalPinToInterrupt(Fc1), handleButtonPress, FALLING);
+  attachInterrupt(digitalPinToInterrupt(Fc2), handleButtonPress2, FALLING);
+}
