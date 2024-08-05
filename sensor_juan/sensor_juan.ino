@@ -13,6 +13,7 @@ int codo;
 int base;
 unsigned long tiempo = millis();
 int distancia;
+int flag = 0;
 
 void setup() {
   Serial.begin(9600); // Inicia la comunicación serie a 9600 baudios
@@ -65,18 +66,32 @@ int leerDistancia() {
   
   return -1; // En caso de error, retorna -1
 }
-
+void Stop(){
+  flag = 0;
+  digitalWrite(M11, LOW);
+  digitalWrite(M12, LOW);
+  digitalWrite(M21, LOW);
+  digitalWrite(M22, LOW);
+  attachInterrupt(digitalPinToInterrupt(Fc1), handleButtonPress, FALLING);
+  attachInterrupt(digitalPinToInterrupt(Fc2), handleButtonPress2, FALLING);
+}
 void loop() {
   distancia = leerDistancia();
-  Serial.print("Distancia: ");
+  if (distancia < 100) {
+    Stop();
+    return; // Salir de loop() para evitar ejecutar más código después de Stop()
+  }
+ /* Serial.print("Distancia: ");
   Serial.print(distancia);
-  Serial.println(" cm");
+  Serial.println(" cm");*/
 
   tiempo = millis();
   codo = digitalRead(Fc1);
   base = digitalRead(Fc2);
+  if(distancia > 100 && distancia < 200) flag =1;
+  
 
-  if (distancia > 100 && distancia < 200 && millis() - tiempo < 100 && Home == 0) {
+  if ( millis() - tiempo < 100 && Home == 0 && flag == 1) {
     tiempo = millis();
     if (codo == HIGH && base == HIGH) {
       digitalWrite(M11, HIGH);
@@ -105,7 +120,7 @@ void loop() {
     }
   }
 
-  Serial.println(Home);
+  Serial.println(flag);
 
   if (Home == 1) {
     delay(2000);   
@@ -136,5 +151,6 @@ void loop() {
     attachInterrupt(digitalPinToInterrupt(Fc1), handleButtonPress, FALLING);
     attachInterrupt(digitalPinToInterrupt(Fc2), handleButtonPress2, FALLING);
     Home = 0;
+    flag = 0;
   }
 }
