@@ -10,7 +10,7 @@ const int M22= 10;
 int Home = 0;
 int codo ;
 int base ;
-int sensor = 2;  
+int sensor = 2;   
 unsigned long tiempo = millis();
 int flag;
 
@@ -101,31 +101,94 @@ tiempo=millis();
     }
     Serial.println(Home); 
     if (Home == 1 ){
-      delay(2000);   
+     
+      
+      /*
+      
+      digitalWrite(M11,LOW);
+      digitalWrite(M12,HIGH); // CODO ARRIBA
+     
+      digitalWrite(M11,LOW);
+      digitalWrite(M12,LOW);  //APAGA CODO
+      
+      digitalWrite(M11,HIGH);
+      digitalWrite(M12,LOW); //CODO ABAJO
+      
+      digitalWrite(M21,LOW);
+      digitalWrite(M22,HIGH);//BASE DERECHA
+      
+      digitalWrite(M21,LOW);
+      digitalWrite(M22,LOW);// APAGA BASE
+      
+      digitalWrite(M21,HIGH);
+      digitalWrite(M22,LOW); //BASE IZQUIERDA
+      */
+
+      
+      delay(2000);
       digitalWrite(M11,LOW);
       digitalWrite(M12,HIGH);
-      delay(1800);
+      delay(1000);
+      digitalWrite(M21,LOW);
+      digitalWrite(M22,HIGH);
+      delay(1000);
+      digitalWrite(M21,LOW);
+      digitalWrite(M22,LOW);
       digitalWrite(M11,LOW);
       digitalWrite(M12,LOW);
-      delay(1000);
+      delay(600);
+      digitalWrite(M21,HIGH);
+      digitalWrite(M22,LOW); 
+      delay(500);
       digitalWrite(M11,HIGH);
+      digitalWrite(M12,LOW); 
+      delay(800);
+      digitalWrite(M21,LOW);
+      digitalWrite(M22,LOW);
+      digitalWrite(M11,LOW);
       digitalWrite(M12,LOW);
+      delay(500);  
+      digitalWrite(M11,LOW);
+      digitalWrite(M12,HIGH);
+      delay(500);
+      digitalWrite(M21,LOW);
+      digitalWrite(M22,HIGH);
       delay(1000);
       digitalWrite(M11,LOW);
       digitalWrite(M12,LOW);
+      digitalWrite(M21,LOW);
+      digitalWrite(M22,LOW);
+      delay(500);
+      digitalWrite(M21,HIGH);
+      digitalWrite(M22,LOW);
+      delay(700);
+      digitalWrite(M11,LOW);
+      digitalWrite(M12,HIGH);
+      delay(500);
+      digitalWrite(M11,LOW);
+      digitalWrite(M12,LOW);
+      digitalWrite(M21,LOW);
+      digitalWrite(M22,LOW);
       delay(200);
       digitalWrite(M21,LOW);
       digitalWrite(M22,HIGH);
-      delay(2000);
+      delay(1500);
       digitalWrite(M21,LOW);
       digitalWrite(M22,LOW);
-      delay(1000);
+      delay(100);
       digitalWrite(M21,HIGH);
       digitalWrite(M22,LOW);
+      delay(500);
+      digitalWrite(M11,HIGH);
+      digitalWrite(M12,LOW);
       delay(2000);
+      digitalWrite(M11,LOW);
+      digitalWrite(M12,LOW);
       digitalWrite(M21,LOW);
       digitalWrite(M22,LOW);
+      delay(5000);
       
+       
      attachInterrupt(digitalPinToInterrupt(Fc1), handleButtonPress, FALLING);
      attachInterrupt(digitalPinToInterrupt(Fc2), handleButtonPress2, FALLING);
      Home = 0;
