@@ -115,14 +115,14 @@ void loop() {
             digitalWrite(M12, LOW);
             digitalWrite(M21, HIGH);
             digitalWrite(M22, LOW);
-            
+             Serial.println("base moviendose");
         } else if (codo == LOW && base == LOW) {
             digitalWrite(M11, LOW);
             digitalWrite(M12, LOW);
             digitalWrite(M21, LOW);
             digitalWrite(M22, LOW);
             Home = 1;
-         
+          Serial.println("motores detenido");
         }
     }
 
