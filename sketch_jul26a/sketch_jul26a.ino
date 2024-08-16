@@ -87,6 +87,15 @@ void loop() {
   }
 }
 
+<<<<<<< HEAD
+void Movimiento(){
+  delay(1500);
+  digitalWrite(Motor1,LOW);
+  digitalWrite(Motor2,HIGH);
+  delay(2000);
+  digitalWrite(Motor1,LOW);
+  digitalWrite(Motor2,LOW);
+=======
 void realizarSecuencia() {
   moverMotor(M11, M12, 1000);
   moverMotor(M11, M12, 1000);
@@ -101,6 +110,7 @@ void regresarAPosicionInicial() {
   moverMotor(M11, M12, 1000, true);
   delay(1500);
   moverMotor(M21, M22, 1000, true);  // Mover motor 2 en reversa
+>>>>>>> 84597710e1844bff2b20529980e00f3fbe48cdfa
   delay(1000);
   moverMotor(M21, M22, 1000, true);
   delay(1000);
