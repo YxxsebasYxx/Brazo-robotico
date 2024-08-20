@@ -66,7 +66,8 @@ int leerDistancia() {
   
   return -1; // En caso de error, retorna -1
 }
-void Stop(){
+
+void Stop() {
   flag = 0;
   digitalWrite(M11, LOW);
   digitalWrite(M12, LOW);
@@ -75,23 +76,19 @@ void Stop(){
   attachInterrupt(digitalPinToInterrupt(Fc1), handleButtonPress, FALLING);
   attachInterrupt(digitalPinToInterrupt(Fc2), handleButtonPress2, FALLING);
 }
-void loop() {
+
+void controlarMotores() {
   distancia = leerDistancia();
-  if (distancia < 100) {
-    Stop();
-    return; // Salir de loop() para evitar ejecutar más código después de Stop()
-  }
- /* Serial.print("Distancia: ");
-  Serial.print(distancia);
-  Serial.println(" cm");*/
 
   tiempo = millis();
   codo = digitalRead(Fc1);
   base = digitalRead(Fc2);
-  if(distancia > 100 && distancia < 200) flag =1;
-  
 
-  if ( millis() - tiempo < 100 && Home == 0 && flag == 1) {
+  if (distancia > 100 && distancia < 200) {
+    flag = 1;
+  }
+
+  if (millis() - tiempo < 100 && Home == 0 && flag == 1) {
     tiempo = millis();
     if (codo == HIGH && base == HIGH) {
       digitalWrite(M11, HIGH);
@@ -119,10 +116,10 @@ void loop() {
       Home = 1;
     }
   }
+}
 
-  Serial.println(flag);
-
-  if (Home == 1) {
+void ejecutarSecuencia() {
+  if (Home == 1 && flag == 1) {
     delay(2000);   
     digitalWrite(M11, LOW);
     digitalWrite(M12, HIGH);
@@ -153,4 +150,11 @@ void loop() {
     Home = 0;
     flag = 0;
   }
+}
+
+void loop() {
+  controlarMotores();
+  ejecutarSecuencia();
+  controlarMotores();
+  delay(10000);
 }
